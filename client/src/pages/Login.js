@@ -5,14 +5,64 @@ import Logo from '../assets/alo.png'
 import axios from 'axios'
 import { ToastContainer, toast } from 'react-toastify'
 import "react-toastify/dist/ReactToastify.css"
-import { loginRoute } from '../utils/APIRoutes';
+import { loginRoute, registerRoute, frontendRoute } from '../utils/APIRoutes';
+import GoogleButton from 'react-google-button';
+// // import { firebase} from '../../firebase'
+import firebaseapp, { auth } from '../firebase';
+import { signInWithPopup, GoogleAuthProvider, signInWithEmailAndPassword, sendEmailVerification, applyActionCode } from 'firebase/auth';
 
+
+const gGProvider = new GoogleAuthProvider(auth)
 export default function Login() {
     const navigate = useNavigate()
     const [values, setValues] = useState({
         username: "",
         password: "",
     })
+
+    const handleGgLogin = async () => {
+        gGProvider.addScope('profile');
+        gGProvider.addScope('email');
+        const result = await signInWithPopup(auth, gGProvider)
+        // The signed-in user info.
+
+        const user = result.user;
+        if (user != null) {
+            console.log(user)
+            const email = user.email;
+            const password = "123456";
+            const credential = GoogleAuthProvider.credentialFromResult(result)
+            const token = credential.accessToken;
+            var url = loginRoute;
+            const { data } = await axios.post(registerRoute, {
+                email,
+                email,
+                password,
+            })
+            // var data = {
+            //     // requestType: "VERIFY_EMAIL",
+            //     idToken: credential.accessToken
+            // }
+
+            axios.post(url, data, {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            }).then((res) => {
+                console.log(res)
+
+            }).catch((err) => {
+                console.log(err)
+            })
+            navigate('/')
+
+        } else {
+            console.log("Erros acces token")
+            navigate('/login')
+        }
+
+
+    }
 
     const handleSubmit = async (event) => {
         event.preventDefault();
@@ -24,26 +74,26 @@ export default function Login() {
                 password,
             })
 
-            if(data.status === false) {
+            if (data.status === false) {
                 toast.error(data.msg)
             }
-    
-            if(data.status === true) {
+
+            if (data.status === true) {
                 localStorage.setItem('chat-app-user', JSON.stringify(data.user))
-                navigate('/')
+                axios.get(frontendRoute)
             }
         }
     }
 
     const handleValidation = () => {
-        const { password,username} = values
-        if (password === "" ) {
+        const { password, username } = values
+        if (password === "") {
             console.log("Password and confirm password shold be same")
             toast.error("Email và password là bắt buộc!", {
-              pauseOnHover: true,
-          })
+                pauseOnHover: true,
+            })
             return false;
-        } else if (username.length  === "") {
+        } else if (username.length === "") {
             toast.error("Email và password là bắt buộc!", {
                 pauseOnHover: true,
             })
@@ -66,7 +116,7 @@ export default function Login() {
                         placeholder='Tên đăng nhập:'
                         name='username'
                         onChange={e => handleChange(e)}
-                        min = "3"
+                        min="3"
                     />
 
                     <input
@@ -78,6 +128,9 @@ export default function Login() {
 
                     <button type='submit'>Đăng nhập</button>
                     <span>Chưa có tài khoản ? <Link to="/register">Đăng ký</Link></span>
+                    <div>
+                        <GoogleButton onClick={() => handleGgLogin()} />
+                    </div>
                 </form>
             </FormContainer>
             <ToastContainer />
@@ -86,6 +139,7 @@ export default function Login() {
 }
 
 const FormContainer = styled.div`
+
 height: 100vh;
 width: 100vw;
 display: flex;

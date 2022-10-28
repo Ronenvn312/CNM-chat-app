@@ -1,39 +1,115 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom';
+import { GoogleButton } from 'react-google-button';
 import styled from 'styled-components'
 import Logo from '../assets/alo.png'
 import axios from 'axios'
 import { ToastContainer, toast } from 'react-toastify'
 import "react-toastify/dist/ReactToastify.css"
-import { registerRoute } from '../utils/APIRoutes';
-
+import { loginRoute, registerRoute } from '../utils/APIRoutes';
+import { ActionCodeOperation, createUserWithEmailAndPassword, isSignInWithEmailLink, sendSignInLinkToEmail, signInWithEmailLink } from 'firebase/auth';
+import firebaseapp, { auth } from '../firebase';
+import { sendEmailVerification } from 'firebase/auth';
+// import { UserAuth } from '../context/AuthContext';
 export default function Register() {
     const navigate = useNavigate()
+    const [data, setData] = useState(false);
+    const [user, setUser] = useState({})
+    // const { googleSignIn, user } = UserAuth();
+    // const handleGoogleSignIn = async () => {
+    //     try {
+    //       await googleSignIn();
+    //     } catch (error) {
+    //       console.log(error);
+    //     }
+    //   };
+
+    //   useEffect(() => {
+    //     if (user != null) {
+    //       navigate('/account');
+    //     }
+    //   }, [user]);
+
     const [values, setValues] = useState({
         username: "",
         email: "",
         password: "",
         confirmPassword: "",
     })
+    // const verifyEmail = async (auth, email) => {
+    //     const actionCodeSettings = {
+    //         // URL you want to redirect back to. The domain (www.example.com) for this
+    //         // URL must be in the authorized domains list in the Firebase Console.
+    //         url: 'https://www.google.com/',
+    //         // This must be true.
+    //         handleCodeInApp: true,
+    //         dynamicLinkDomain: 'http://localhost:3000/'
+    //     };
+    //     await sendSignInLinkToEmail(auth, email, actionCodeSettings)
+    //         .then(() => {
+    //             // The link was successfully sent. Inform the user.
+    //             // Save the email locally so you don't need to ask the user for it again
+    //             // if they open the link on the same device.
+    //             window.localStorage.setItem('emailForSignIn', email);
+    //             // ...
+    //         })
+    //         .catch((error) => {
+    //             const errorCode = error.code;
+    //             const errorMessage = error.message;
+    //             console.log(errorCode)
+    //             console.log(errorMessage)
+    //         });
+    //     if (isSignInWithEmailLink(auth, window.location.href)) {
+    //         await signInWithEmailLink(auth, email , window.location.href);
+    //     }
 
+    // }
     const handleSubmit = async (event) => {
         event.preventDefault();
         if (handleValidation()) {
             console.log("in validation", registerRoute)
             const { password, username, email } = values
-            const { data } = await axios.post(registerRoute, {
-                username,
-                email,
-                password,
-            })
 
-            if(data.status === false) {
+            await createUserWithEmailAndPassword(auth, email, password)
+                .then((userCredential) => {
+                    // var url = registerRoute;
+                    // let data = {
+                    //     requestType: "VERIFY_EMAIL",
+                    //     idToken: userCredential.accessToken
+                    // }
+                    // verifyEmail(auth, email)
+                    // userCredential.sendEmailVerification();
+                    // auth.sendEmailVerification()
+                    console.log(userCredential.user.email)
+
+                    const datast = axios.post(registerRoute, {
+                        username,
+                        email,
+                        password,
+                    }, {
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
+                    }).then((res) => {
+                        console.log(res)
+
+                    }).catch((err) => {
+                        console.log(err)
+                    })
+                    setData(datast)
+                })
+                .catch((error) => {
+                    console.log(error)
+                })
+
+            if (data.status === false) {
                 toast.error(data.msg)
             }
-    
-            if(data.status === true) {
+
+            if (data.status === true) {
+                console.log(data.user)
                 localStorage.setItem('chat-app-user', JSON.stringify(data.user))
-                navigate('/')
+                navigate('/login')
             }
         }
     }
@@ -104,6 +180,7 @@ export default function Register() {
 
                     <button type='submit'>Đăng ký</button>
                     <span>Đã có tài khoản ? <Link to="/login">Login</Link></span>
+
                 </form>
             </FormContainer>
             <ToastContainer />
@@ -112,6 +189,7 @@ export default function Register() {
 }
 
 const FormContainer = styled.div`
+
     height: 100vh;
     width: 100vw;
     display: flex;

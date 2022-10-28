@@ -15,6 +15,6 @@ mongoose.connect(process.env.MONGO_URL, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
 }).then(() => console.log("Connected to MongoDB"))
-.catch((err) => console.log(err.message))
+    .catch((err) => console.log(err.message))
 
 const server = app.listen(process.env.PORT, () => console.log(`Server started on port : ${process.env.PORT}`))
