@@ -4,7 +4,10 @@ const User = require('../model/userModel')
 module.exports.getFriends = async (req, res,next) => {
     const {id_user} = req.body
     try{
-        var query = [{'$match':{'id_user': id_user}},{'$unwind': '$friends'},{'$replaceWith':'$friends'},{'$group':{'_id':'$id_friend'}},{'$lookup':{'from':'users','localField':'_id','foreignField':'_id','as':'user'}},{'$unwind':'$user'},{'$replaceWith':'$user'}]
+        var query = [{'$match':{'id_user': id_user}},
+        {'$unwind': '$friends'},{'$replaceWith':'$friends'},
+        {'$group':{'_id':'$id_friend'}},
+        {'$lookup':{'from':'users','localField':'_id','foreignField':'_id','as':'user'}},{'$unwind':'$user'},{'$replaceWith':'$user'}]
         console.log(query)
         const friendAcepted = await friends.aggregate(query);
         res.json(friendAcepted)
@@ -35,3 +38,22 @@ module.exports.addFriends = async (req, res, next) => {
         next(ex)
     }
 }
+---------------------------
+const mongoose = require('mongoose')
+
+const friendsModel = new mongoose.Schema({
+    "id_user": {
+        type: Number
+    },
+    "friends": [
+        {
+            "id_room": {
+                type: Number
+            },
+            "id_friend": {
+                type: Number
+            }
+        }
+    ]
+})
+module.exports = mongoose.model("friends", friendsModel)

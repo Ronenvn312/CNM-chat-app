@@ -19,24 +19,23 @@ const userSchema = new mongoose.Schema({
         require: true,
         min: 8,
     },
-    isAvatarImageSet: {
-        type: Boolean,
-        default: false
-    },
-    avatar: {
+    
+    pic: {
         type: String,
-        default: ""
+        default:
+            "https://icon-library.com/images/anonymous-avatar-icon/anonymous-avatar-icon-25.jpg",
+        required: true
     },
-    phone: {
-        type: String,
-        default: ""
-    },
-    last_login: { type: Date }
-    ,
-    verifyed: {
-        type: Boolean,
-        default: false
-    },
+    // phone: {
+    //     type: String,
+    //     default: ""
+    // },
+    // last_login: { type: Date }
+    // ,
+    // verifyed: {
+    //     type: Boolean,
+    //     default: false
+    // },
     token: { type: String }
 })
 

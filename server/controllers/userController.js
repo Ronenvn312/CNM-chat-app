@@ -5,7 +5,7 @@ const jwt = require("jsonwebtoken")
 
 module.exports.register = async (req, res, next) => {
     try {
-        const { username, email, password } = req.body
+        const { username, email, password, pic } = req.body
         const usernnameCheck = await User.findOne({ username })
         if (usernnameCheck)
             return res.json({ msg: "Username already used", status: false })
@@ -18,7 +18,8 @@ module.exports.register = async (req, res, next) => {
         const user = await User.create({
             email,
             username,
-            password: hashedPassword
+            password: hashedPassword,
+            pic
         })
         // Create token
         const token = jwt.sign(
@@ -40,14 +41,14 @@ module.exports.register = async (req, res, next) => {
 
 module.exports.login = async (req, res, next) => {
     try {
-        const { username, password } = req.body
+        const { email, password } = req.body
         const dt = new Date() // last date login
-        const user = await User.findOne({ username })
+        const user = await User.findOne({ email })
         if (!user)
-            return res.json({ msg: "Tên đăng nhập hoặc mật khẩu không đúng!", status: false })
+            return res.json({ msg: "Email dang nhap khong ton tai!", status: false })
         const isPasswordValid = await bcrypt.compare(password, user.password)
         if (!isPasswordValid)
-            return res.json({ msg: "Tên đăng nhập hoặc mật khẩu không đúng!", status: false })
+            return res.json({ msg: "Mật khẩu không đúng!", status: false })
 
         const token = jwt.sign(
             { user_id: user._id, email: user.email },
@@ -63,7 +64,6 @@ module.exports.login = async (req, res, next) => {
         
         return res.json({ status: true, user })
     } catch (ex) {
-        console.log(ex)
         next(ex)
     }
 }
@@ -74,4 +74,22 @@ module.exports.getAllUsers = async (req, res,next ) => {
     } catch (err) {
         res.status(500).json({ message: err.message })
     }
+}
+
+module.exports.getUserByID = async(req, res, next) => {
+    const {email } = req.body
+
+    try{
+        const query = {'email': email};
+        const user = await User.findOne(query)
+        if(user) {
+            res.json(user)
+        } else {
+            res.json({})
+        }
+
+    } catch (ex) {
+        next(ex)
+    }
+
 }

@@ -5,7 +5,9 @@ import Logo from '../assets/alo.png'
 import axios from 'axios'
 import { ToastContainer, toast } from 'react-toastify'
 import "react-toastify/dist/ReactToastify.css"
-import { loginRoute, registerRoute, frontendRoute } from '../utils/APIRoutes';
+
+import { getUserRoute, loginRoute, registerRoute } from '../utils/APIRoutes';
+
 import GoogleButton from 'react-google-button';
 // // import { firebase} from '../../firebase'
 import firebaseapp, { auth } from '../firebase';
@@ -16,7 +18,7 @@ const gGProvider = new GoogleAuthProvider(auth)
 export default function Login() {
     const navigate = useNavigate()
     const [values, setValues] = useState({
-        username: "",
+        email: "",
         password: "",
     })
 
@@ -29,20 +31,25 @@ export default function Login() {
         const user = result.user;
         if (user != null) {
             console.log(user)
+            const username = user.displayName;
             const email = user.email;
             const password = "123456";
             const credential = GoogleAuthProvider.credentialFromResult(result)
             const token = credential.accessToken;
             var url = loginRoute;
-            const { data } = await axios.post(registerRoute, {
-                email,
-                email,
-                password,
-            })
-            // var data = {
-            //     // requestType: "VERIFY_EMAIL",
-            //     idToken: credential.accessToken
+            // const user = axios.get(getUserRoute, {
+            //     email
+            // })
+            // if(user) {
+            //     console.log("User exited! Fail register")
             // }
+            const { data } = await axios.post(registerRoute, {
+                username,
+                email,
+                password
+            })
+
+            
 
             axios.post(url, data, {
                 headers: {
@@ -55,7 +62,6 @@ export default function Login() {
                 console.log(err)
             })
             navigate('/')
-
         } else {
             console.log("Erros acces token")
             navigate('/login')
@@ -68,9 +74,9 @@ export default function Login() {
         event.preventDefault();
         if (handleValidation()) {
             console.log("in validation", loginRoute)
-            const { password, username } = values
+            const { password, email } = values
             const { data } = await axios.post(loginRoute, {
-                username,
+                email,
                 password,
             })
 
@@ -80,20 +86,20 @@ export default function Login() {
 
             if (data.status === true) {
                 localStorage.setItem('chat-app-user', JSON.stringify(data.user))
-                axios.get(frontendRoute)
+                navigate('/')
             }
         }
     }
 
     const handleValidation = () => {
-        const { password, username } = values
+        const { password, email } = values
         if (password === "") {
             console.log("Password and confirm password shold be same")
             toast.error("Email và password là bắt buộc!", {
                 pauseOnHover: true,
             })
             return false;
-        } else if (username.length === "") {
+        } else if (email.length === "") {
             toast.error("Email và password là bắt buộc!", {
                 pauseOnHover: true,
             })
@@ -113,8 +119,8 @@ export default function Login() {
                     </div>
                     <input
                         type='text'
-                        placeholder='Tên đăng nhập:'
-                        name='username'
+                        placeholder='Email đăng nhập:'
+                        name='email'
                         onChange={e => handleChange(e)}
                         min="3"
                     />
