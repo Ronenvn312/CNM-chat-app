@@ -1,5 +1,6 @@
-const { register, login, getAllUsers, getUserByID } = require('../controllers/userController')
+const { register, login, getAllUsers, getUserByID, verify } = require('../controllers/userController')
 const { sendMessage, allMessages} = require('../controllers/messageControllers')
+const { senEmailVerify} = require('../utils/email')
 const { accessChat,
     fetchChats,
     createGroupChat,
@@ -14,16 +15,6 @@ router.get("/users", getAllUsers)
 // router.get("/friends",getFriends)
 // router.get("/add-friend",addFriends)
 router.get("/get-user", getUserByID)
-
-
-// // chat
-// router.post("/accessChat", accessChat)
-// router.get("/fetchChats", fetchChats)
-// router.post("/createGroupChat", createGroupChat)
-// router.put("/renameGroup", renameGroup)
-// router.put("/addToGroup", addToGroup)
-// router.put("/removeFromGroup", removeFromGroup)
-// //message 
-// router.post("/sendMessage", sendMessage)
-// router.get("/getMessage", allMessages)
+router.get("/sentEmail", senEmailVerify )
+router.get("/verify-email",verify)
 module.exports = router

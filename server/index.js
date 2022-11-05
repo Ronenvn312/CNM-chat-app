@@ -12,7 +12,7 @@ require('dotenv').config()
 app.use(cors())
 app.use(express.json())
 
-app.use("/api/auth", userRoute)
+app.use("/api/auth/", userRoute)
 app.use("/api/chat/", chatRoute)
 app.use("/api/message/", messageRoute)
 // const io = new Server(app)

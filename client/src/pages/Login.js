@@ -6,21 +6,22 @@ import axios from 'axios'
 import { ToastContainer, toast } from 'react-toastify'
 import "react-toastify/dist/ReactToastify.css"
 
-import { getUserRoute, loginRoute, registerRoute } from '../utils/APIRoutes';
+import { loginRoute, registerRoute } from '../utils/APIRoutes';
 
 import GoogleButton from 'react-google-button';
-// // import { firebase} from '../../firebase'
-import firebaseapp, { auth } from '../firebase';
-import { signInWithPopup, GoogleAuthProvider, signInWithEmailAndPassword, sendEmailVerification, applyActionCode } from 'firebase/auth';
+import  { auth } from '../firebase';
+import { signInWithPopup, GoogleAuthProvider, signInWithEmailAndPassword, sendEmailVerification } from 'firebase/auth';
+import { UserAuth } from '../context/AuthContext';
+import { Button } from 'antd';
 
 
 const gGProvider = new GoogleAuthProvider(auth)
 export default function Login() {
     const navigate = useNavigate()
-    const [values, setValues] = useState({
-        email: "",
-        password: "",
-    })
+
+    const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('') 
+//   const {setTimeActive} = UserAuth()
 
     const handleGgLogin = async () => {
         gGProvider.addScope('profile');
@@ -37,20 +38,12 @@ export default function Login() {
             const credential = GoogleAuthProvider.credentialFromResult(result)
             const token = credential.accessToken;
             var url = loginRoute;
-            // const user = axios.get(getUserRoute, {
-            //     email
-            // })
-            // if(user) {
-            //     console.log("User exited! Fail register")
-            // }
+
             const { data } = await axios.post(registerRoute, {
                 username,
                 email,
                 password
             })
-
-            
-
             axios.post(url, data, {
                 headers: {
                     'Content-Type': 'application/json'
@@ -74,7 +67,6 @@ export default function Login() {
         event.preventDefault();
         if (handleValidation()) {
             console.log("in validation", loginRoute)
-            const { password, email } = values
             const { data } = await axios.post(loginRoute, {
                 email,
                 password,
@@ -86,13 +78,26 @@ export default function Login() {
 
             if (data.status === true) {
                 localStorage.setItem('chat-app-user', JSON.stringify(data.user))
-                navigate('/')
+                signInWithEmailAndPassword(auth, email, password)
+                .then(() => {
+                    if (!auth.currentUser.emailVerified) {
+                        sendEmailVerification(auth.currentUser)
+                            .then(() => {
+                                navigate('/verify-email')
+                            })
+                            .catch(err => toast.error(err.message))
+                    } else {
+                        navigate('/')
+                    }
+                })
+                .catch(err => toast.error(err.message))
             }
+
+           
         }
     }
 
     const handleValidation = () => {
-        const { password, email } = values
         if (password === "") {
             console.log("Password and confirm password shold be same")
             toast.error("Email và password là bắt buộc!", {
@@ -107,9 +112,6 @@ export default function Login() {
         } else return true
     }
 
-    const handleChange = (event) => {
-        setValues({ ...values, [event.target.name]: event.target.value })
-    }
     return (
         <>
             <FormContainer>
@@ -120,20 +122,22 @@ export default function Login() {
                     <input
                         type='text'
                         placeholder='Email đăng nhập:'
+                        value={email}
                         name='email'
-                        onChange={e => handleChange(e)}
+                        onChange={e => setEmail(e.target.value)}
                         min="3"
                     />
 
                     <input
+                        value={password}
                         type='password'
                         placeholder='Mật khẩu:'
                         name='password'
-                        onChange={e => handleChange(e)}
+                        onChange={e => setPassword(e.target.value)}
                     />
 
                     <button type='submit'>Đăng nhập</button>
-                    <span>Chưa có tài khoản ? <Link to="/register">Đăng ký</Link></span>
+                    <span>Chưa có tài khoản ? <Link to={"/register"}>Đăng ký</Link></span>
                     <div>
                         <GoogleButton onClick={() => handleGgLogin()} />
                     </div>

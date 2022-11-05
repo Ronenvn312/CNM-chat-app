@@ -3,6 +3,7 @@ const host = "http://localhost:5000"
 export const registerRoute = `${host}/api/auth/register`
 export const loginRoute = `${host}/api/auth/login`
 export const getUserRoute = `${host}/api/auth/get-user`
+export const verifiEmailRoute = `${host}/api/auth/verify-email`
 // const router for chat 
 
 // router for message

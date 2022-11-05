@@ -1,34 +1,20 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom';
-import { GoogleButton } from 'react-google-button';
 import styled from 'styled-components'
 import Logo from '../assets/alo.png'
 import axios from 'axios'
 import { ToastContainer, toast } from 'react-toastify'
 import "react-toastify/dist/ReactToastify.css"
-import { loginRoute, registerRoute } from '../utils/APIRoutes';
-import { ActionCodeOperation, createUserWithEmailAndPassword, isSignInWithEmailLink, sendSignInLinkToEmail, signInWithEmailLink } from 'firebase/auth';
-import firebaseapp, { auth } from '../firebase';
-import { sendEmailVerification } from 'firebase/auth';
-// import { UserAuth } from '../context/AuthContext';
+import { registerRoute } from '../utils/APIRoutes';
+import { createUserWithEmailAndPassword, sendEmailVerification } from 'firebase/auth';
+import { auth } from '../firebase';
+import { AuthProvider } from '../context/AuthContext';
+
 export default function Register() {
     const navigate = useNavigate()
     const [data, setData] = useState(false);
     const [user, setUser] = useState({})
-    // const { googleSignIn, user } = UserAuth();
-    // const handleGoogleSignIn = async () => {
-    //     try {
-    //       await googleSignIn();
-    //     } catch (error) {
-    //       console.log(error);
-    //     }
-    //   };
-
-    //   useEffect(() => {
-    //     if (user != null) {
-    //       navigate('/account');
-    //     }
-    //   }, [user]);
+    // const { setTimeActive } = React.useContext(AuthProvider);
 
     const [values, setValues] = useState({
         username: "",
@@ -42,41 +28,19 @@ export default function Register() {
         if (handleValidation()) {
             console.log("in validation", registerRoute)
             const { password, username, email } = values
-
             await createUserWithEmailAndPassword(auth, email, password)
-                .then((userCredential) => {
-                   
-                    console.log(userCredential.user.email)
-
-                    const datast = axios.post(registerRoute, {
-                        username,
-                        email,
-                        password,
-                    }, {
-                        headers: {
-                            'Content-Type': 'application/json'
+                .then(() => {
+                      let result =  axios.post(registerRoute, {username, email, password})
+                        if(result.status){
+                            navigate("/verify-email")
                         }
-                    }).then((res) => {
-                        console.log(res)
-
-                    }).catch((err) => {
-                        console.log(err)
+                        else {
+                        toast.error("Khong the gui link verify account", {
+                            pauseOnHover: true,
+                        })
+                        }
                     })
-                    setData(datast)
-                })
-                .catch((error) => {
-                    console.log(error)
-                })
-
-            if (data.status === false) {
-                toast.error(data.msg)
-            }
-
-            if (data.status === true) {
-                console.log(data.user)
-                localStorage.setItem('chat-app-user', JSON.stringify(data.user))
-                navigate('/login')
-            }
+                    .catch((err) => toast.error(err.message))
         }
     }
 
@@ -145,7 +109,7 @@ export default function Register() {
                     />
 
                     <button type='submit'>Đăng ký</button>
-                    <span>Đã có tài khoản ? <Link to="/login">Login</Link></span>
+                    <span>Đã có tài khoản ? <Link onClick={() => navigate("/login")}>Login</Link></span>
 
                 </form>
             </FormContainer>
