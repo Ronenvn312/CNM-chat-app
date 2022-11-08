@@ -5,6 +5,7 @@ import Login from './pages/Login'
 import Chat from './pages/Chat'
 import Account from './pages/Account'
 import { AuthProvider } from './context/AuthContext'
+import Home from './pages/Home'
 export default function App() {
   return (
     <BrowserRouter>
@@ -15,6 +16,7 @@ export default function App() {
         <Route path='/login' element={<Login />} />
         <Route path='/register' element={<Register />} />
         <Route path='/account' element={<Account />} />
+        <Route path='/home' element={<Home />}/>
 
       </Routes>
     </BrowserRouter>

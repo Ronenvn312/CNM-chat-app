@@ -19,24 +19,19 @@ const userSchema = new mongoose.Schema({
         require: true,
         min: 8,
     },
-    
     pic: {
         type: String,
         default:
             "https://icon-library.com/images/anonymous-avatar-icon/anonymous-avatar-icon-25.jpg",
         required: true
     },
-    // phone: {
-    //     type: String,
-    //     default: ""
-    // },
-    // last_login: { type: Date }
-    // ,
-    // verifyed: {
-    //     type: Boolean,
-    //     default: false
-    // },
-    token: { type: String }
+    isVerifyed: {
+        type: Boolean,
+        default: false
+    },
+    token: {
+        type: String
+    }
 })
 
 module.exports = mongoose.model("Users", userSchema)

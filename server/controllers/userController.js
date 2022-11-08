@@ -45,7 +45,7 @@ module.exports.login = async (req, res, next) => {
         const dt = new Date() // last date login
         const user = await User.findOne({ email })
         if (!user)
-            return res.json({ msg: "Email dang nhap khong ton tai!", status: false })
+            return res.json({ msg: "Email đăng nhập không tồn tại!", status: false })
         const isPasswordValid = await bcrypt.compare(password, user.password)
         if (!isPasswordValid)
             return res.json({ msg: "Mật khẩu không đúng!", status: false })
@@ -61,13 +61,15 @@ module.exports.login = async (req, res, next) => {
         user.token = token;
         user.last_login = dt; // add last date login
         delete user.password
-        
+
         return res.json({ status: true, user })
     } catch (ex) {
         next(ex)
     }
 }
-module.exports.getAllUsers = async (req, res,next ) => {
+
+// Get All
+module.exports.getAllUsers = async (req, res) => {
     try {
         const users = await User.find()
         res.json(users)
@@ -76,20 +78,32 @@ module.exports.getAllUsers = async (req, res,next ) => {
     }
 }
 
-module.exports.getUserByID = async(req, res, next) => {
-    const {email } = req.body
-
-    try{
-        const query = {'email': email};
-        const user = await User.findOne(query)
-        if(user) {
-            res.json(user)
-        } else {
-            res.json({})
+// Get One
+module.exports.getOneUserByEmail = async (req,res, next) => {
+    let user
+    try {
+        user = await User.findOne({email: req.params.email})
+        if (user == null) {
+            return res.status(404).json({ message: "can't find user!" })
         }
-
-    } catch (ex) {
-        next(ex)
+        return res.json(user)
+    } catch (err) {
+        res.status(500).json({ message: err.message })
+        next(err)
     }
-
 }
+
+// module.exports = async function getUser(req, res, next) {
+//     let user
+//     try {
+//         user = await User.findById(req.params.email)
+//         if (user == null) {
+//             return res.status(404).json({ message: "can't find user!" })
+//         }
+//     } catch (err) {
+//         return res.status(500).json({ message: err.message })
+//     }
+
+//     res.user = user
+//     next()
+// }

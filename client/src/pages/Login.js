@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
 import { Link, useNavigate } from 'react-router-dom';
 import styled from 'styled-components'
 import Logo from '../assets/alo.png'
@@ -7,68 +7,70 @@ import { ToastContainer, toast } from 'react-toastify'
 import "react-toastify/dist/ReactToastify.css"
 
 import { getUserRoute, loginRoute, registerRoute } from '../utils/APIRoutes';
+import { AppContext } from '../context/AppContext';
 
-import GoogleButton from 'react-google-button';
+// import GoogleButton from 'react-google-button';
 // // import { firebase} from '../../firebase'
-import firebaseapp, { auth } from '../firebase';
-import { signInWithPopup, GoogleAuthProvider, signInWithEmailAndPassword, sendEmailVerification, applyActionCode } from 'firebase/auth';
+// import firebaseapp, { auth } from '../firebase';
+// import { signInWithPopup, GoogleAuthProvider, signInWithEmailAndPassword, sendEmailVerification, applyActionCode } from 'firebase/auth';
 
 
-const gGProvider = new GoogleAuthProvider(auth)
+// const gGProvider = new GoogleAuthProvider(auth)
 export default function Login() {
+    const { setEmail } = useContext(AppContext)
     const navigate = useNavigate()
     const [values, setValues] = useState({
         email: "",
         password: "",
     })
 
-    const handleGgLogin = async () => {
-        gGProvider.addScope('profile');
-        gGProvider.addScope('email');
-        const result = await signInWithPopup(auth, gGProvider)
-        // The signed-in user info.
+    // const handleGgLogin = async () => {
+    //     gGProvider.addScope('profile');
+    //     gGProvider.addScope('email');
+    //     const result = await signInWithPopup(auth, gGProvider)
+    //     // The signed-in user info.
 
-        const user = result.user;
-        if (user != null) {
-            console.log(user)
-            const username = user.displayName;
-            const email = user.email;
-            const password = "123456";
-            const credential = GoogleAuthProvider.credentialFromResult(result)
-            const token = credential.accessToken;
-            var url = loginRoute;
-            // const user = axios.get(getUserRoute, {
-            //     email
-            // })
-            // if(user) {
-            //     console.log("User exited! Fail register")
-            // }
-            const { data } = await axios.post(registerRoute, {
-                username,
-                email,
-                password
-            })
+    //     const user = result.user;
+    //     if (user != null) {
+    //         console.log(user)
+    //         const username = user.displayName;
+    //         const email = user.email;
+    //         const password = "123456";
+    //         const credential = GoogleAuthProvider.credentialFromResult(result)
+    //         const token = credential.accessToken;
+    //         var url = loginRoute;
+    //         // const user = axios.get(getUserRoute, {
+    //         //     email
+    //         // })
+    //         // if(user) {
+    //         //     console.log("User exited! Fail register")
+    //         // }
+    //         const { data } = await axios.post(registerRoute, {
+    //             username,
+    //             email,
+    //             password
+    //         })
 
             
 
-            axios.post(url, data, {
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            }).then((res) => {
-                console.log(res)
+    //         axios.post(url, data, {
+    //             headers: {
+    //                 'Content-Type': 'application/json'
+    //             }
+    //         }).then((res) => {
+    //             console.log(res)
 
-            }).catch((err) => {
-                console.log(err)
-            })
-            navigate('/')
-        } else {
-            console.log("Erros acces token")
-            navigate('/login')
-        }
+    //         }).catch((err) => {
+    //             console.log(err)
+    //         })
+    //         navigate('/')
+    //     } else {
+    //         console.log("Erros acces token")
+    //         navigate('/login')
+    //     }
 
 
-    }
+    // }
 
     const handleSubmit = async (event) => {
         event.preventDefault();
@@ -84,9 +86,10 @@ export default function Login() {
                 toast.error(data.msg)
             }
 
-            if (data.status === true) {
-                localStorage.setItem('chat-app-user', JSON.stringify(data.user))
-                navigate('/')
+            if (data.status === true) {    
+                setEmail(email)
+                navigate('/home')
+                // console.log(data.user);
             }
         }
     }
@@ -94,7 +97,7 @@ export default function Login() {
     const handleValidation = () => {
         const { password, email } = values
         if (password === "") {
-            console.log("Password and confirm password shold be same")
+            console.log("Password and confirm password should be same")
             toast.error("Email và password là bắt buộc!", {
                 pauseOnHover: true,
             })
@@ -134,9 +137,9 @@ export default function Login() {
 
                     <button type='submit'>Đăng nhập</button>
                     <span>Chưa có tài khoản ? <Link to="/register">Đăng ký</Link></span>
-                    <div>
+                    {/* <div>
                         <GoogleButton onClick={() => handleGgLogin()} />
-                    </div>
+                    </div> */}
                 </form>
             </FormContainer>
             <ToastContainer />

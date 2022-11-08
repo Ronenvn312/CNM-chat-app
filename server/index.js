@@ -38,4 +38,4 @@ mongoose.connect(process.env.MONGO_URL, {
 }).then(() => console.log("Connected to MongoDB"))
     .catch((err) => console.log(err.message))
 // io.listen(pro)
-const server = app.listen(process.env.PORT, () => console.log(`Server started on port : ${process.env.PORT}`))
+const server = app.listen(process.env.PORT, () => console.log(`Server started on port ${process.env.PORT}`))

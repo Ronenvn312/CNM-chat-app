@@ -45,7 +45,6 @@ export default function Register() {
 
             await createUserWithEmailAndPassword(auth, email, password)
                 .then((userCredential) => {
-                   
                     console.log(userCredential.user.email)
 
                     const datast = axios.post(registerRoute, {
@@ -58,9 +57,6 @@ export default function Register() {
                         }
                     }).then((res) => {
                         console.log(res)
-
-                    }).catch((err) => {
-                        console.log(err)
                     })
                     setData(datast)
                 })
@@ -71,10 +67,9 @@ export default function Register() {
             if (data.status === false) {
                 toast.error(data.msg)
             }
-
             if (data.status === true) {
                 console.log(data.user)
-                localStorage.setItem('chat-app-user', JSON.stringify(data.user))
+                // localStorage.setItem('chat-app-user', JSON.stringify(data.user))
                 navigate('/login')
             }
         }
