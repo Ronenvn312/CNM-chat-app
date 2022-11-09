@@ -47,7 +47,7 @@ module.exports.accessChat = async (req, res) => {
 //@access          Protected
 module.exports.fetchChats = async (req, res, next) => {
   try {
-    Chat.find({ users: { $elemMatch: { $eq: req.body.user._id } } })
+    Chat.find({ users: { $elemMatch: { $eq: req.query._id } }})
       .then((result) => {
         res.json(result)
       });
