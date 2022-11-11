@@ -20,7 +20,7 @@ module.exports.accessChat = async (req, res) => {
       { users: { $elemMatch: { $eq: userId } } },
     ],
   })
-    
+
 
   if (isChat.length > 0) {
     res.send(isChat[0]);
@@ -43,19 +43,20 @@ module.exports.accessChat = async (req, res) => {
 };
 
 //@description     Fetch all chats for a user
-//@route           GET /api/chat/
+//@route           GET /api/chat/group?user_id=""
 //@access          Protected
 module.exports.fetchChats = async (req, res, next) => {
   try {
-    Chat.find({ users: { $elemMatch: { $eq: req.query._id } }})
-      .then((result) => {
-        res.json(result)
-      });
+    await Chat.find({ users: { $elemMatch: { $eq: req.query.user_id } } })
+    .populate("users").exec((err, docs) => {
+      res.json(docs)
+    })
   } catch (error) {
-    res.status(400);
+    res.status(400)
     next(error)
   }
 };
+
 
 //@description     Create New Group Chat
 //@route           POST /api/chat/group
@@ -66,7 +67,7 @@ module.exports.createGroupChat = async (req, res) => {
     return res.status(400).send({ message: "Please Fill all the feilds" });
   }
 
-  var {users} = req.body;
+  var { users } = req.body;
 
   if (users.length < 2) {
     return res

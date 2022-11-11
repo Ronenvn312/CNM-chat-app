@@ -3,14 +3,16 @@ const { accessChat,
     createGroupChat,
     renameGroup,
     addToGroup,
-    removeFromGroup } = require('../controllers/chatControllers')
+    removeFromGroup, 
+    getAllMemberInChatGroup} = require('../controllers/chatControllers')
 const router = require('express').Router()
 
 
 
 // chat
 router.post("/accessChat", accessChat)
-router.get("/fetchChats", fetchChats)
+router.get("/group", fetchChats)
+// router.get("/group", getAllMemberInChatGroup)
 router.post("/createGroupChat", createGroupChat)
 router.put("/renameGroup", renameGroup)
 router.put("/addToGroup", addToGroup)

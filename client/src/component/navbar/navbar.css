@@ -1,7 +1,3 @@
-:root {
-    --HL_sidebar: #0091ff
-}
-
 
 .nav_bar_container {
     background: var(--HL_sidebar);
