@@ -4,15 +4,19 @@ import "./sidebar.css"
 import { AppContext } from '../../context/AppContext'
 import Search from '../search/Search'
 
+const Axios = axios.create({
+  baseURL: "http://localhost:5000/api/chat"
+})
+
 function Sidebar() {
   const { currentUser } = useContext(AppContext)
   const [listGroupChat, setListGroupChat] = useState([])
   // console.log(currentUser)
   console.log(listGroupChat)
   function getAllChatGroup() {
-    axios.get("http://localhost:5000/api/chat/fetchChats", {
+    Axios.get("/group", {
       params: {
-        _id: currentUser._id
+        user_id: currentUser._id
       }
     })
       .then((res) => setListGroupChat(res.data))
