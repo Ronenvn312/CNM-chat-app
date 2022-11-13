@@ -68,3 +68,16 @@
 .info_extra_container {
     display: flex;
 }
+
+.admin_key {
+    background-image: url("https://stc-chat.zdn.vn/images/icons/chat_icon_admin.png");
+    width: 12px;
+    height: 12px;
+    background-size: cover;
+    background-repeat: no-repeat
+}
+
+.not_admin_key {
+    width: 12px;
+    height: 12px;
+}

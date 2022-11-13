@@ -17,7 +17,7 @@ import { AppContext } from '../context/AppContext';
 
 // const gGProvider = new GoogleAuthProvider(auth)
 export default function Login() {
-    const { setEmail } = useContext(AppContext)
+    const { setEmail } = useContext(AppContext)  
     const navigate = useNavigate()
     const [values, setValues] = useState({
         email: "",

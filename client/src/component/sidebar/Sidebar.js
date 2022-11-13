@@ -15,7 +15,7 @@ function Sidebar() {
   const [currentGroup, setCurrentGroup] = useState({})
 
   function getAllChatGroup() {
-    Axios.get("/group", {
+    Axios.get("/groups", {
       params: {
         user_id: currentUser._id
       }

@@ -11,7 +11,7 @@ function ExtraSidebar({ currentGroup }) {
       <div className='ex_sidebar_header'>
         <h1>Thông tin</h1>
         {displayNameInChatFeed === "" ? "" : <div className='info_group'>
-          <img src={currentGroup.imageGroup}
+          <img src={currentGroup.imageGroup} alt=""
             style={{ width: "45px", height: "45px", borderRadius: "50%", objectFit: "scale-down" }} />
           <span>{currentGroup.chatName}</span>
         </div>}
@@ -23,7 +23,8 @@ function ExtraSidebar({ currentGroup }) {
               return (
                 <li>
                   <div className='info_extra_container'>
-                    <img src={user.pic} />
+                    <img src={user.pic} alt="Please Login!" />
+                    <div className={user._id === currentGroup.groupAdmin ? 'admin_key' : "not_admin_key"}></div>
                     <h3>{user.username}</h3>
                   </div>
                   <button className='btn_make_friend'>Kết bạn</button>

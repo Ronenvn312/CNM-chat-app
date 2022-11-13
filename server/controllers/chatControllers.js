@@ -43,7 +43,7 @@ module.exports.accessChat = async (req, res) => {
 };
 
 //@description     Fetch all chats for a user
-//@route           GET /api/chat/group?user_id=""
+//@route           GET /api/chat/groups?user_id=""
 //@access          Protected
 module.exports.fetchChats = async (req, res, next) => {
   try {

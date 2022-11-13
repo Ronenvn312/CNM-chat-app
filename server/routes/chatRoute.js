@@ -11,7 +11,7 @@ const router = require('express').Router()
 
 // chat
 router.post("/accessChat", accessChat)
-router.get("/group", fetchChats)
+router.get("/groups", fetchChats)
 // router.get("/group", getAllMemberInChatGroup)
 router.post("/createGroupChat", createGroupChat)
 router.put("/renameGroup", renameGroup)

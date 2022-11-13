@@ -82,7 +82,7 @@ module.exports.getAllUsers = async (req, res) => {
 module.exports.getOneUserByEmail = async (req,res, next) => {
     let user
     try {
-        user = await User.findOne({email: req.params.email})
+        user = await User.findOne({email: req.query.email})
         if (user == null) {
             return res.status(404).json({ message: "can't find user!" })
         }

@@ -12,7 +12,7 @@ const { accessChat,
 router.post("/register", register)
 router.post("/login", login)
 router.get("/users", getAllUsers)
-router.get("/users/:email",getOneUserByEmail)
+router.get("/user",getOneUserByEmail)
 
 
 // // chat
