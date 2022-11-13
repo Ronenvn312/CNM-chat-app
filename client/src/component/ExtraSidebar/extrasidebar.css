@@ -1,0 +1,70 @@
+.extra_sidebar_container {
+    width: 340px;
+    height: 100vh;
+    position: absolute;
+    top: 0;
+    right: 0;
+    border-left: 1px solid var(--border);
+}
+
+.ex_sidebar_header {
+    user-select: none;
+    height: 50px;
+    text-align: center;
+    font-weight: 600;
+    line-height: 49px;
+    border-bottom: 1px solid var(--border);
+}
+
+.info_group {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px;
+    border-bottom: 1px solid var(--border);
+}
+
+.groupMember ul li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px 10px;
+}
+
+.groupMember ul li:hover {
+    background: var( --lst-item-hover);
+    cursor: pointer;
+}
+
+.groupMember ul li img {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.groupMember ul li h3 {
+    font-size: 14px;
+    font-weight: 400;
+    padding-left: 14px;
+}
+
+.btn_make_friend {
+    height: 30px;
+    min-width: 50px;
+    border-radius: 3px;
+    border: none;
+    color: #0068ff;
+    background: #c8deff;
+    padding: 0 5px;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.btn_make_friend:hover {
+    background: rgba(34, 116, 240, .5);
+} 
+
+.info_extra_container {
+    display: flex;
+}

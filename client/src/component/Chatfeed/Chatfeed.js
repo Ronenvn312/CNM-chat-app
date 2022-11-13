@@ -1,9 +1,15 @@
-import React from 'react'
+import React, { useContext } from 'react'
+import { AppContext } from '../../context/AppContext'
 import "./chatfeed.css"
 
 function Chatfeed() {
+  const { displayNameInChatFeed } = useContext(AppContext)
   return (
-    <div>Chatfeed</div>
+    <div className='chatfeed_container'>
+      <div className='chatfeed_header'>
+        {displayNameInChatFeed === "" ? "Live Chat" : displayNameInChatFeed}
+      </div>
+    </div>
   )
 }
 

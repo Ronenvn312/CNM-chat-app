@@ -3,6 +3,7 @@
   --HL_sidebar: #0091ff;
   --border: #e5e7eb;
   --btn : #0068ff;
+  --lst-item-hover: #eeeff2;
 }
 
 html,
@@ -157,6 +158,7 @@ body {
 
 .home_container {
   display: flex;
+  position: relative;
 }
 
 .btn {

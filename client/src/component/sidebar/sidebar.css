@@ -6,13 +6,21 @@
 .chat_group_item {
     display: flex;
     padding: 10px 50px;
+    cursor: pointer;
+    user-select: none;
     align-items: center;
     justify-content: flex-start;
     border-bottom: 1px solid var(--border);
 }
 
+.chat_group_item:hover {
+    background: var(--lst-item-hover);
+}
+
 .chat_group_item img {
     width: 45px;
+    height: 45px;
+    object-fit: scale-down;
     border-radius: 50%;
 }
 

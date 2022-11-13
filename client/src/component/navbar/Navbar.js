@@ -7,7 +7,7 @@ import "./navbar.css"
 
 function Navbar() {
     const { currentUser } = useContext(AppContext)
-    console.log(currentUser)
+    // console.log(currentUser)
 
     const ic_style = {
         margin: "20px 0",
